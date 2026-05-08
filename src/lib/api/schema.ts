@@ -131,16 +131,11 @@ export interface components {
             channelId?: string;
         };
         GetProgressResponse: {
-            queueJob?: components["schemas"]["QueueJob"];
-            events?: components["schemas"]["QueueJobEvent"][];
-            childQueueJobs?: components["schemas"]["GetProgressResponse"][];
+            progress: components["schemas"]["Progress"];
         };
-        QueueJob: {
+        Progress: {
             /** Format: uuid */
-            id?: string;
-            parentJob?: components["schemas"]["QueueJob"];
-            /** @enum {string} */
-            type?: "FETCH_PLATFORM_CONTENT" | "FETCH_CHANNEL_METADATA" | "FETCH_VIDEO_METADATA";
+            id: string;
             /**
              * @description Queue job status.
              *
@@ -151,26 +146,14 @@ export interface components {
              *     - `CANCELED` — user/system canceled it
              * @enum {string}
              */
-            status?: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED";
-            payload?: {
-                [key: string]: Record<string, never>;
-            };
-            requestedBy?: components["schemas"]["User"];
-            correlationKey?: string;
-            dedupeKey?: string;
-            errorType?: string;
-            errorMessage?: string;
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            startedAt?: string;
-            /** Format: date-time */
-            finishedAt?: string;
+            latestStatus: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED";
+            events: components["schemas"]["ProgressStatusEvent"][];
+            childProgresses: components["schemas"]["Progress"][];
         };
-        QueueJobEvent: {
+        ProgressStatusEvent: {
             /** Format: uuid */
-            id?: string;
-            job?: components["schemas"]["QueueJob"];
+            id: string;
+            message: string;
             /**
              * @description Queue job status.
              *
@@ -181,24 +164,7 @@ export interface components {
              *     - `CANCELED` — user/system canceled it
              * @enum {string}
              */
-            status?: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED";
-            message?: string;
-            /** Format: date-time */
-            createdAt?: string;
-        };
-        User: {
-            /** Format: uuid */
-            id?: string;
-            username?: string;
-            displayName?: string;
-            email?: string;
-            /** Format: date-time */
-            dateJoined?: string;
-            /** Format: date-time */
-            lastUpdated?: string;
-            /** Format: date-time */
-            lastLogin?: string;
-            verified?: boolean;
+            status: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED";
         };
     };
     responses: never;
