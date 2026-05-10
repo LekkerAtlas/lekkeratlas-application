@@ -11,8 +11,12 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["healthCheck"];
+        get?: never;
         put?: never;
+        /**
+         * Synchronize Authentik user
+         * @description Receives Authentik webhook events and synchronizes the provided user into the LekkerAtlas database. Existing users are updated and unknown users are automatically created. This endpoint is intended for Authentik server-to-server webhook communication only.
+         */
         post: operations["handleAuthentikEvent"];
         delete?: never;
         options?: never;
@@ -140,26 +144,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    healthCheck: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": string;
-                };
-            };
-        };
-    };
     handleAuthentikEvent: {
         parameters: {
             query?: never;
@@ -167,14 +151,36 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
+        /** @description Authentik webhook payload containing the synchronized user information. */
         requestBody: {
             content: {
                 "application/json": components["schemas"]["AuthentikEventRequest"];
             };
         };
         responses: {
-            /** @description OK */
+            /** @description Webhook processed successfully */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing or invalid webhook secret */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Webhook source is not allowed */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal synchronization error */
+            500: {
                 headers: {
                     [name: string]: unknown;
                 };
