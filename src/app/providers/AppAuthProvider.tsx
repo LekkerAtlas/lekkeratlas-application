@@ -1,6 +1,6 @@
 import { authConfig } from "@/features/auth/config/authConfig";
 import { AuthProvider } from "react-oidc-context";
 
-export function AppAuthProvider({ children }: React.PropsWithChildren) {
+export function AppAuthProvider({ children }: Readonly<React.PropsWithChildren>) {
     return <AuthProvider {...authConfig}>{children}</AuthProvider>;
 }
