@@ -24,7 +24,7 @@ RUN cat > /docker-entrypoint.d/10-generate-runtime-config.sh <<'EOF' \
 set -eu
 
 cat > /usr/share/nginx/html/config.js <<EOF_CONFIG
-window.__APP_CONFIG__ = {
+globalThis.__APP_CONFIG__ = {
   AUTH_AUTHORITY: "${AUTH_AUTHORITY}",
   AUTH_CLIENT_ID: "${AUTH_CLIENT_ID}",
   AUTH_REDIRECT_URI: "${AUTH_REDIRECT_URI}",
