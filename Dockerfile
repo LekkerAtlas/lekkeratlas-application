@@ -19,7 +19,7 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 RUN cat > /docker-entrypoint.d/10-generate-runtime-config.sh <<'EOF' \
-    && chmod +x /docker-entrypoint.d/10-generate-runtime-config.sh
+  && chmod +x /docker-entrypoint.d/10-generate-runtime-config.sh
 #!/bin/sh
 set -eu
 
@@ -28,7 +28,8 @@ window.__APP_CONFIG__ = {
   AUTH_AUTHORITY: "${AUTH_AUTHORITY}",
   AUTH_CLIENT_ID: "${AUTH_CLIENT_ID}",
   AUTH_REDIRECT_URI: "${AUTH_REDIRECT_URI}",
-  AUTH_POST_LOGOUT_REDIRECT_URI: "${AUTH_POST_LOGOUT_REDIRECT_URI}"
+  AUTH_POST_LOGOUT_REDIRECT_URI: "${AUTH_POST_LOGOUT_REDIRECT_URI}",
+  API_BASE_URL: "${API_BASE_URL}"
 };
 EOF_CONFIG
 EOF
