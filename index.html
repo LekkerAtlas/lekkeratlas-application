@@ -1,13 +1,35 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intakeatlas-website</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>intakeatlas-website</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module">
+    globalThis.__APP_CONFIG__ = {};
+
+    try {
+      const response = await fetch('/config.js');
+
+      if (response.ok) {
+        const scriptContent = await response.text();
+
+        if (scriptContent.trim().startsWith('globalThis.__APP_CONFIG__')) {
+          const script = document.createElement('script');
+          script.textContent = scriptContent;
+          document.head.appendChild(script);
+        }
+      }
+    } catch {
+      // Ignore missing runtime config in local development.
+    }
+  </script>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
