@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAccessToken } from "@/features/auth/hooks/useAccessToken";
-import { apiClient } from "@/lib/apiClient";
+import { apiClient } from "@/lib/api-client";
 import type { ApiResponse } from "@/lib/api/types";
 
 const apiRoute = "/api/me"

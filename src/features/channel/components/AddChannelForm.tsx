@@ -8,7 +8,7 @@ import { ProgressQueryView } from "@/features/progress/components/ProgressQueryV
 import { isTerminalProgressStatus } from "@/features/progress/progressStatus";
 import type { ProgressResponse } from "@/features/progress/progressTypes";
 import type { ApiRequest, ApiResponse } from "@/lib/api/types";
-import { apiClient } from "@/lib/apiClient";
+import { apiClient } from "@/lib/api-client";
 
 const apiRoute = "/api/channels";
 

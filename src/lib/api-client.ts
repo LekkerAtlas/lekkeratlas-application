@@ -1,4 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { getRequiredConfigValue } from "@/config/runtime-config";
+
+const API_BASE_URL = getRequiredConfigValue("API_BASE_URL");
 
 type ApiOptions<TRequest> = Omit<RequestInit, "body"> & {
     accessToken?: string | null;
@@ -18,7 +20,7 @@ export async function apiClient<TResponse, TRequest = unknown>(
             ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
             ...headers,
         },
-        body: body !== undefined ? JSON.stringify(body) : undefined,
+        body: body === undefined ? undefined : JSON.stringify(body),
     });
 
     if (!response.ok) {
