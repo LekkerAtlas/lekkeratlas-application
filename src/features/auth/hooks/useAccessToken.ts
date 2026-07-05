@@ -1,4 +1,4 @@
-import { useAuth } from "react-oidc-context";
+import { useAuth } from 'react-oidc-context';
 
 export function useAccessToken() {
     const auth = useAuth();

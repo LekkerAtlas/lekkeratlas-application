@@ -1,4 +1,4 @@
-import { useAuth } from "react-oidc-context";
+import { useAuth } from 'react-oidc-context';
 
 export function LoginButton() {
     const auth = useAuth();
@@ -7,15 +7,9 @@ export function LoginButton() {
 
     if (auth.isAuthenticated) {
         return (
-            <button onClick={() => void auth.signoutRedirect()}>
-                Logout
-            </button>
+            <button onClick={() => void auth.signoutRedirect()}>Logout</button>
         );
     }
 
-    return (
-        <button onClick={() => void auth.signinRedirect()}>
-            Login
-        </button>
-    );
+    return <button onClick={() => void auth.signinRedirect()}>Login</button>;
 }

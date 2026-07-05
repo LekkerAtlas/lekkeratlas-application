@@ -1,16 +1,24 @@
-import type { Progress } from "@/features/progress/progressTypes";
-import { ProgressEventList } from "./ProgressEventList";
-import { ProgressStatusBadge } from "./ProgressStatusBadge";
-import "@/features/progress/progress.css"
+import type { Progress } from '@/features/progress/progressTypes';
+import { ProgressEventList } from './ProgressEventList';
+import { ProgressStatusBadge } from './ProgressStatusBadge';
+import '@/features/progress/progress.css';
 
-export function ProgressCard({ progress, depth = 0 }: { progress: Progress; depth?: number }) {
+export function ProgressCard({
+    progress,
+    depth = 0,
+}: {
+    progress: Progress;
+    depth?: number;
+}) {
     const hasChildren = progress.childProgresses.length > 0;
 
     return (
         <article className="progress-card">
             <header className="progress-card__header">
                 <div>
-                    <p className="progress-card__label">{depth === 0 ? "Main job" : "Child job"}</p>
+                    <p className="progress-card__label">
+                        {depth === 0 ? 'Main job' : 'Child job'}
+                    </p>
                     <p className="progress-card__id">{progress.id}</p>
                 </div>
 
@@ -27,7 +35,11 @@ export function ProgressCard({ progress, depth = 0 }: { progress: Progress; dept
 
                     <div className="progress-children__content">
                         {progress.childProgresses.map((child) => (
-                            <ProgressCard key={child.id} progress={child} depth={depth + 1} />
+                            <ProgressCard
+                                key={child.id}
+                                progress={child}
+                                depth={depth + 1}
+                            />
                         ))}
                     </div>
                 </details>

@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/webhooks/authentik": {
+    '/webhooks/authentik': {
         parameters: {
             query?: never;
             header?: never;
@@ -17,14 +17,14 @@ export interface paths {
          * Synchronize Authentik user
          * @description Receives Authentik webhook events and synchronizes the provided user into the LekkerAtlas database. Existing users are updated and unknown users are automatically created. This endpoint is intended for Authentik server-to-server webhook communication only.
          */
-        post: operations["handleAuthentikEvent"];
+        post: operations['handleAuthentikEvent'];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/channels": {
+    '/api/channels': {
         parameters: {
             query?: never;
             header?: never;
@@ -33,21 +33,21 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["addChannel"];
+        post: operations['addChannel'];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/progress/{queueJobId}": {
+    '/api/progress/{queueJobId}': {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["getProgress"];
+        get: operations['getProgress'];
         put?: never;
         post?: never;
         delete?: never;
@@ -56,7 +56,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/command/{commandId}": {
+    '/api/command/{commandId}': {
         parameters: {
             query?: never;
             header?: never;
@@ -66,7 +66,7 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        delete: operations["deleteCommand"];
+        delete: operations['deleteCommand'];
         options?: never;
         head?: never;
         patch?: never;
@@ -78,7 +78,7 @@ export interface components {
     schemas: {
         AuthentikEventRequest: {
             action?: string;
-            user?: components["schemas"]["AuthentikUser"];
+            user?: components['schemas']['AuthentikUser'];
         };
         AuthentikUser: {
             uuid?: string;
@@ -100,7 +100,7 @@ export interface components {
             queueJobId?: string;
         };
         GetProgressResponse: {
-            progress: components["schemas"]["Progress"];
+            progress: components['schemas']['Progress'];
         };
         Progress: {
             /** Format: uuid */
@@ -115,9 +115,10 @@ export interface components {
              *     - `CANCELED` — user/system canceled it
              * @enum {string}
              */
-            latestStatus: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED";
-            events: components["schemas"]["ProgressStatusEvent"][];
-            childProgresses: components["schemas"]["Progress"][];
+            latestStatus:
+                'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELED';
+            events: components['schemas']['ProgressStatusEvent'][];
+            childProgresses: components['schemas']['Progress'][];
         };
         ProgressStatusEvent: {
             /** Format: uuid */
@@ -133,7 +134,7 @@ export interface components {
              *     - `CANCELED` — user/system canceled it
              * @enum {string}
              */
-            status: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED";
+            status: 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELED';
         };
     };
     responses: never;
@@ -154,7 +155,7 @@ export interface operations {
         /** @description Authentik webhook payload containing the synchronized user information. */
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AuthentikEventRequest"];
+                'application/json': components['schemas']['AuthentikEventRequest'];
             };
         };
         responses: {
@@ -197,7 +198,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AddChannelRequest"];
+                'application/json': components['schemas']['AddChannelRequest'];
             };
         };
         responses: {
@@ -207,7 +208,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["CommandAcceptedResponse"];
+                    '*/*': components['schemas']['CommandAcceptedResponse'];
                 };
             };
         };
@@ -229,7 +230,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["GetProgressResponse"];
+                    '*/*': components['schemas']['GetProgressResponse'];
                 };
             };
         };
