@@ -1,11 +1,11 @@
-import { useAuth } from "react-oidc-context";
+import { useAuth } from 'react-oidc-context';
 
 export function UserInfo() {
     const auth = useAuth();
 
     if (!auth.user) return null;
 
-    console.log(auth.user)
+    console.log(auth.user);
 
     return (
         <pre>
@@ -16,7 +16,7 @@ export function UserInfo() {
                     subject: auth.user.profile.sub,
                 },
                 null,
-                2,
+                2
             )}
         </pre>
     );

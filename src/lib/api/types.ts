@@ -1,4 +1,4 @@
-import type { paths } from "@/lib/api/schema";
+import type { paths } from '@/lib/api/schema';
 
 type PathKey = keyof paths & string;
 
@@ -23,21 +23,23 @@ type PathOperation<
 export type ApiRequest<
     Path extends string,
     Method extends keyof paths[MatchingPath<Path>],
-> = PathOperation<Path, Method> extends {
-    requestBody: { content: { "application/json": infer Body } };
-}
-    ? Body
-    : never;
+> =
+    PathOperation<Path, Method> extends {
+        requestBody: { content: { 'application/json': infer Body } };
+    }
+        ? Body
+        : never;
 
 export type ApiResponse<
     Path extends string,
     Method extends keyof paths[MatchingPath<Path>],
-> = PathOperation<Path, Method> extends {
-    responses: { 200: { content: infer Content } };
-}
-    ? Content extends { "application/json": infer Body }
-        ? Body
-        : Content extends { "*/*": infer Body }
-          ? Body
-          : never
-    : never;
+> =
+    PathOperation<Path, Method> extends {
+        responses: { 200: { content: infer Content } };
+    }
+        ? Content extends { 'application/json': infer Body }
+            ? Body
+            : Content extends { '*/*': infer Body }
+              ? Body
+              : never
+        : never;

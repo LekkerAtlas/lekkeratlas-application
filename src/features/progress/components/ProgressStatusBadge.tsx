@@ -1,10 +1,12 @@
-import type { QueueJobStatus } from "@/features/progress/progressTypes";
-import { getProgressStatusLabel } from "@/features/progress/progressStatus";
-import "@/features/progress/progress.css"
+import type { QueueJobStatus } from '@/features/progress/progressTypes';
+import { getProgressStatusLabel } from '@/features/progress/progressStatus';
+import '@/features/progress/progress.css';
 
 export function ProgressStatusBadge({ status }: { status: QueueJobStatus }) {
     return (
-        <span className={`progress-status-badge progress-status--${status.toLowerCase()}`}>
+        <span
+            className={`progress-status-badge progress-status--${status.toLowerCase()}`}
+        >
             {getProgressStatusLabel(status)}
         </span>
     );

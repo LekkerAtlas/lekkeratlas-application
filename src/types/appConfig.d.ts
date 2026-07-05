@@ -2,7 +2,7 @@
  * Specifies runtime values that differ per environment
  */
 
-export { };
+export {};
 
 declare global {
     interface Window {

@@ -24,13 +24,15 @@ export function getRequiredConfigValue(key: RuntimeConfigKey): string {
     if (!value) {
         throw new Error(
             `Missing configuration value: ${key}. ` +
-            `Expected either runtime config value "${key}" or Vite env variable "VITE_${key}" to be defined.`,
+                `Expected either runtime config value "${key}" or Vite env variable "VITE_${key}" to be defined.`
         );
     }
 
     return value;
 }
 
-export function getOptionalConfigValue(key: RuntimeConfigKey): string | undefined {
+export function getOptionalConfigValue(
+    key: RuntimeConfigKey
+): string | undefined {
     return runtimeConfig?.[key] ?? getViteConfigValue(key);
 }

@@ -1,11 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
-import { useAccessToken } from "@/features/auth/hooks/useAccessToken";
-import { apiClient } from "@/lib/api-client";
-import type { ApiResponse } from "@/lib/api/types";
+import { useQuery } from '@tanstack/react-query';
+import { useAccessToken } from '@/features/auth/hooks/useAccessToken';
+import { apiClient } from '@/lib/api-client';
+import type { ApiResponse } from '@/lib/api/types';
 
-const apiRoute = "/api/me"
+const apiRoute = '/api/me';
 
-type MeResponse = ApiResponse<typeof apiRoute, "get">
+type MeResponse = ApiResponse<typeof apiRoute, 'get'>;
 
 function getMe(accessToken: string) {
     return apiClient<MeResponse>(apiRoute, { accessToken });
@@ -15,7 +15,7 @@ export function MeExample() {
     const accessToken = useAccessToken();
 
     const meQuery = useQuery({
-        queryKey: ["me"],
+        queryKey: ['me'],
         queryFn: () => getMe(accessToken!),
         enabled: Boolean(accessToken),
     });
