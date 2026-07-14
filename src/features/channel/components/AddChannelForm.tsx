@@ -5,7 +5,6 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { useAccessToken } from '@/features/auth/hooks/useAccessToken';
 import { ProgressQueryView } from '@/features/progress/components/ProgressQueryView';
-import { isTerminalProgressStatus } from '@/features/progress/progressStatus';
 import type { ProgressResponse } from '@/features/progress/progressTypes';
 import type { ApiRequest, ApiResponse } from '@/lib/api/types';
 import { apiClient } from '@/lib/api-client';

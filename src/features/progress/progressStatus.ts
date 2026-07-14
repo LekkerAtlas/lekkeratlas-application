@@ -1,32 +1,49 @@
-import type { Progress, QueueJobStatus } from './progressTypes';
+import type { Progress } from './progressTypes';
 
-export function isTerminalProgressStatus(progress: Progress | undefined) {
-    if (!progress) {
-        return false;
+type ProgressStatusValue = Progress['latestStatus'];
+
+const terminalStatuses: readonly ProgressStatusValue[] = [
+    'COMPLETED',
+    'FAILED',
+    'CANCELED',
+];
+
+export class ProgressStatus {
+    private readonly value: ProgressStatusValue;
+
+    constructor(value: ProgressStatusValue) {
+        this.value = value;
     }
 
-    const ownStatusIsTerminal =
-        progress.latestStatus === 'COMPLETED' ||
-        progress.latestStatus === 'FAILED' ||
-        progress.latestStatus === 'CANCELED';
+    get status(): ProgressStatusValue {
+        return this.value;
+    }
 
-    return (
-        ownStatusIsTerminal &&
-        progress.childProgresses.every(isTerminalProgressStatus)
-    );
-}
+    isFinal(): boolean {
+        return terminalStatuses.includes(this.value);
+    }
 
-export function getProgressStatusLabel(status: QueueJobStatus) {
-    switch (status) {
-        case 'QUEUED':
-            return 'Queued';
-        case 'RUNNING':
-            return 'Running';
-        case 'COMPLETED':
-            return 'Succeeded';
-        case 'FAILED':
-            return 'Failed';
-        case 'CANCELED':
-            return 'Canceled';
+    canCancel(): boolean {
+        return this.value === 'QUEUED' || this.value === 'RUNNING';
+    }
+
+    isQueued(): boolean {
+        return this.value === 'QUEUED';
+    }
+
+    isRunning(): boolean {
+        return this.value === 'RUNNING';
+    }
+
+    isCompleted(): boolean {
+        return this.value === 'COMPLETED';
+    }
+
+    isFailed(): boolean {
+        return this.value === 'FAILED';
+    }
+
+    isCanceled(): boolean {
+        return this.value === 'CANCELED';
     }
 }
