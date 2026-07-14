@@ -1,21 +1,19 @@
-import type { Progress } from './progressTypes';
+import type { QueueJobProgressStatus } from './progressTypes';
 
-type ProgressStatusValue = Progress['latestStatus'];
-
-const terminalStatuses: readonly ProgressStatusValue[] = [
+const terminalStatuses: readonly QueueJobProgressStatus[] = [
     'COMPLETED',
     'FAILED',
     'CANCELED',
 ];
 
 export class ProgressStatus {
-    private readonly value: ProgressStatusValue;
+    private readonly value: QueueJobProgressStatus;
 
-    constructor(value: ProgressStatusValue) {
+    constructor(value: QueueJobProgressStatus) {
         this.value = value;
     }
 
-    get status(): ProgressStatusValue {
+    get status(): QueueJobProgressStatus {
         return this.value;
     }
 
