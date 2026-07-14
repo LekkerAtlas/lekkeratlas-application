@@ -4,9 +4,9 @@ import '@/features/progress/progress.css';
 
 export function ProgressEventList({
     events,
-}: {
+}: Readonly<{
     events: ProgressStatusEvent[];
-}) {
+}>) {
     return (
         <ol className="progress-events">
             {events.map((event, index) => (

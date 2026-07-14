@@ -2,14 +2,16 @@ import type { Progress } from '@/features/progress/progressTypes';
 import { ProgressEventList } from './ProgressEventList';
 import { ProgressStatusBadge } from './ProgressStatusBadge';
 import '@/features/progress/progress.css';
+import { CancelJobButton } from './CancelJobButton';
+import { ProgressStatus } from '@/features/progress/progressStatus';
 
 export function ProgressCard({
     progress,
     depth = 0,
-}: {
+}: Readonly<{
     progress: Progress;
     depth?: number;
-}) {
+}>) {
     const hasChildren = progress.childProgresses.length > 0;
 
     return (
@@ -22,6 +24,10 @@ export function ProgressCard({
                     <p className="progress-card__id">{progress.id}</p>
                 </div>
 
+                <CancelJobButton
+                    jobId={progress.id}
+                    status={new ProgressStatus(progress.latestStatus)}
+                />
                 <ProgressStatusBadge status={progress.latestStatus} />
             </header>
 

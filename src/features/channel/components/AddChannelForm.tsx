@@ -5,8 +5,12 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { useAccessToken } from '@/features/auth/hooks/useAccessToken';
 import { ProgressQueryView } from '@/features/progress/components/ProgressQueryView';
-import { isTerminalProgressStatus } from '@/features/progress/progressStatus';
-import type { ProgressResponse } from '@/features/progress/progressTypes';
+import { ProgressStatus } from '@/features/progress/progressStatus';
+import type {
+    Progress,
+    ProgressQueryResult,
+    ProgressResponse,
+} from '@/features/progress/progressTypes';
 import type { ApiRequest, ApiResponse } from '@/lib/api/types';
 import { apiClient } from '@/lib/api-client';
 
@@ -30,6 +34,12 @@ function getProgress(accessToken: string, queueJobId: string) {
     });
 }
 
+function isFinalProgressStatus(progress: Progress | undefined) {
+    return progress
+        ? new ProgressStatus(progress.latestStatus).isFinal()
+        : false;
+}
+
 export function AddChannelForm() {
     const accessToken = useAccessToken();
     const [queueJobId, setQueueJobId] = useState<string | null>(null);
@@ -42,12 +52,12 @@ export function AddChannelForm() {
         },
     });
 
-    const progressQuery = useQuery({
+    const progressQuery: ProgressQueryResult = useQuery({
         queryKey: ['/api/progress/{queueJobId}', queueJobId],
         queryFn: () => getProgress(accessToken!, queueJobId!),
         enabled: Boolean(accessToken && queueJobId),
         refetchInterval: (query) => {
-            return isTerminalProgressStatus(query.state.data?.progress)
+            return isFinalProgressStatus(query.state.data?.progress)
                 ? false
                 : 500;
         },
@@ -59,7 +69,7 @@ export function AddChannelForm() {
         const formData = new FormData(event.currentTarget);
         const channelId = formData.get('channelId');
 
-        const request = {
+        const request: ChannelRequest = {
             channelId:
                 typeof channelId === 'string' && channelId.trim() !== ''
                     ? channelId.trim()
