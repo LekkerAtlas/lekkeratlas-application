@@ -1,16 +1,8 @@
 import type { ChangeEventHandler } from 'react';
-import { useState } from 'react';
 
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { useAccessToken } from '@/features/auth/hooks/useAccessToken';
-import { ProgressQueryView } from '@/features/progress/components/ProgressQueryView';
-import { ProgressStatus } from '@/features/progress/progressStatus';
-import type {
-    Progress,
-    ProgressQueryResult,
-    ProgressResponse,
-} from '@/features/progress/progressTypes';
 import type { ApiRequest, ApiResponse } from '@/lib/api/types';
 import { apiClient } from '@/lib/api-client';
 
@@ -18,6 +10,11 @@ const apiRoute = '/api/channels';
 
 type ChannelRequest = ApiRequest<typeof apiRoute, 'post'>;
 type ChannelResponse = ApiResponse<typeof apiRoute, 'post'>;
+
+type AddChannelFormProps = {
+    onAccepted: (queueJobId: string) => void;
+    onSubmitting?: () => void;
+};
 
 function addChannel(accessToken: string, request: ChannelRequest) {
     return apiClient<ChannelResponse, ChannelRequest>(apiRoute, {
@@ -27,39 +24,19 @@ function addChannel(accessToken: string, request: ChannelRequest) {
     });
 }
 
-function getProgress(accessToken: string, queueJobId: string) {
-    return apiClient<ProgressResponse>(`/api/progress/${queueJobId}`, {
-        method: 'GET',
-        accessToken,
-    });
-}
-
-function isFinalProgressStatus(progress: Progress | undefined) {
-    return progress
-        ? new ProgressStatus(progress.latestStatus).isFinal()
-        : false;
-}
-
-export function AddChannelForm() {
+export function AddChannelForm({
+    onAccepted,
+    onSubmitting,
+}: Readonly<AddChannelFormProps>) {
     const accessToken = useAccessToken();
-    const [queueJobId, setQueueJobId] = useState<string | null>(null);
 
     const addChannelMutation = useMutation({
         mutationFn: (request: ChannelRequest) =>
             addChannel(accessToken!, request),
         onSuccess: (response) => {
-            setQueueJobId(response.queueJobId ?? null);
-        },
-    });
-
-    const progressQuery: ProgressQueryResult = useQuery({
-        queryKey: ['/api/progress/{queueJobId}', queueJobId],
-        queryFn: () => getProgress(accessToken!, queueJobId!),
-        enabled: Boolean(accessToken && queueJobId),
-        refetchInterval: (query) => {
-            return isFinalProgressStatus(query.state.data?.progress)
-                ? false
-                : 500;
+            if (response.queueJobId) {
+                onAccepted(response.queueJobId);
+            }
         },
     });
 
@@ -76,54 +53,49 @@ export function AddChannelForm() {
                     : undefined,
         };
 
-        setQueueJobId(null);
+        onSubmitting?.();
         addChannelMutation.mutate(request);
     };
 
     if (!accessToken) return <p>No access token found.</p>;
 
     return (
-        <div className="space-y-6">
-            <form
-                onSubmit={handleSubmit}
-                className="rounded-xl border bg-white p-4 shadow-sm"
-            >
-                <div className="space-y-2">
-                    <label
-                        htmlFor="channelId"
-                        className="block text-sm font-medium"
-                    >
-                        Channel ID
-                    </label>
-
-                    <input
-                        id="channelId"
-                        name="channelId"
-                        type="text"
-                        placeholder="https://www.youtube.com/@channel"
-                        className="w-full rounded-md border px-3 py-2 text-sm"
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    disabled={addChannelMutation.isPending}
-                    className="mt-4 rounded-md border px-4 py-2 text-sm font-medium disabled:opacity-50"
+        <form
+            onSubmit={handleSubmit}
+            className="rounded-xl border bg-white p-4 shadow-sm"
+        >
+            <div className="space-y-2">
+                <label
+                    htmlFor="channelId"
+                    className="block text-sm font-medium"
                 >
-                    {addChannelMutation.isPending
-                        ? 'Adding channel...'
-                        : 'Add channel'}
-                </button>
+                    Channel ID
+                </label>
 
-                {addChannelMutation.isError && (
-                    <p className="mt-3 text-sm text-red-600">
-                        Failed to add channel:{' '}
-                        {addChannelMutation.error.message}
-                    </p>
-                )}
-            </form>
+                <input
+                    id="channelId"
+                    name="channelId"
+                    type="text"
+                    placeholder="https://www.youtube.com/@channel"
+                    className="w-full rounded-md border px-3 py-2 text-sm"
+                />
+            </div>
 
-            {queueJobId && <ProgressQueryView query={progressQuery} />}
-        </div>
+            <button
+                type="submit"
+                disabled={addChannelMutation.isPending}
+                className="mt-4 rounded-md border px-4 py-2 text-sm font-medium disabled:opacity-50"
+            >
+                {addChannelMutation.isPending
+                    ? 'Adding channel...'
+                    : 'Add channel'}
+            </button>
+
+            {addChannelMutation.isError && (
+                <p className="mt-3 text-sm text-red-600">
+                    Failed to add channel: {addChannelMutation.error.message}
+                </p>
+            )}
+        </form>
     );
 }
