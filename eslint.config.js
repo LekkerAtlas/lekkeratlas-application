@@ -6,10 +6,16 @@ import tseslint from 'typescript-eslint';
 import importPlugin from 'eslint-plugin-import';
 import jsdoc from 'eslint-plugin-jsdoc';
 import stylistic from '@stylistic/eslint-plugin';
-import { defineConfig } from 'eslint/config';
 import path from 'node:path';
+import { defineConfig, includeIgnoreFile } from 'eslint/config';
+import { fileURLToPath } from 'node:url';
+
+const prettierIgnorePath = fileURLToPath(
+    new URL('.prettierignore', import.meta.url)
+);
 
 export default defineConfig([
+    includeIgnoreFile(prettierIgnorePath),
     { ignores: ['dist'] },
     {
         extends: [js.configs.recommended, ...tseslint.configs.recommended],
