@@ -2,11 +2,11 @@ import { AppLayout } from '@/app/layouts/AppLayout';
 import { AddChannelRoute } from '@/app/routes/AddChannelRoute';
 import { LoginRoute } from '@/app/routes/LoginRoute';
 import { NotFoundRoute } from '@/app/routes/NotFoundRoute';
+import { VideoBrowsingRoute } from '@/app/routes/VideoBrowsingRoute';
+import { VideoViewerRoute } from '@/app/routes/VideoViewerRoute';
 import { appPaths } from '@/config/paths';
 import { RequireAuth } from '@/features/auth/components/RequireAuth';
 import { SettingsRoute } from '@/features/settings/routes/SettingsRoute';
-import { VideoBrowsingRoute } from '@/features/videos/routes/VideoBrowsingRoute';
-import { VideoViewerRoute } from '@/features/videos/routes/VideoViewerRoute';
 import { Navigate, Route, Routes } from 'react-router';
 
 export function AppRouter() {

@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    '/webhooks/authentik': {
+    "/webhooks/authentik": {
         parameters: {
             query?: never;
             header?: never;
@@ -17,14 +17,14 @@ export interface paths {
          * Synchronize Authentik user
          * @description Receives Authentik webhook events and synchronizes the provided user into the LekkerAtlas database. Existing users are updated and unknown users are automatically created. This endpoint is intended for Authentik server-to-server webhook communication only.
          */
-        post: operations['handleAuthentikEvent'];
+        post: operations["handleAuthentikEvent"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    '/api/job/{jobId}/cancel': {
+    "/api/job/{jobId}/cancel": {
         parameters: {
             query?: never;
             header?: never;
@@ -33,14 +33,14 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations['cancelJob'];
+        post: operations["cancelJob"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    '/api/channels': {
+    "/api/channels": {
         parameters: {
             query?: never;
             header?: never;
@@ -49,21 +49,21 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations['addChannel'];
+        post: operations["addChannel"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    '/api/progress/{queueJobId}': {
+    "/api/videos": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations['getProgress'];
+        get: operations["getVideos"];
         put?: never;
         post?: never;
         delete?: never;
@@ -72,7 +72,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    '/api/command/{commandId}': {
+    "/api/progress/{queueJobId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getProgress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/command/{commandId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -82,7 +98,7 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        delete: operations['deleteCommand'];
+        delete: operations["deleteCommand"];
         options?: never;
         head?: never;
         patch?: never;
@@ -94,7 +110,7 @@ export interface components {
     schemas: {
         AuthentikEventRequest: {
             action?: string;
-            user?: components['schemas']['AuthentikUser'];
+            user?: components["schemas"]["AuthentikUser"];
         };
         AuthentikUser: {
             uuid?: string;
@@ -115,8 +131,27 @@ export interface components {
             /** Format: uuid */
             queueJobId?: string;
         };
+        CreatorInfo: {
+            /** Format: uuid */
+            creatorId: string;
+            displayName: string;
+        };
+        VideoPreview: {
+            /** Format: uuid */
+            contentId: string;
+            title: string;
+            creatorInfo: components["schemas"]["CreatorInfo"];
+            /** @enum {string} */
+            videoType: "LIVE_STREAM" | "LIVE_STREAM_CLIP" | "OFFICIAL_VIDEO" | "FAN_MADE_VIDEO" | "LEKKER_SPELEN_RELATED" | "OTHER";
+            videoSources: components["schemas"]["VideoSource"][];
+        };
+        VideoSource: {
+            id: string;
+            /** @enum {string} */
+            sourcePlatform: "YOUTUBE";
+        };
         GetProgressResponse: {
-            progress: components['schemas']['Progress'];
+            progress: components["schemas"]["Progress"];
         };
         Progress: {
             /** Format: uuid */
@@ -131,10 +166,9 @@ export interface components {
              *     - `CANCELED` — user/system canceled it
              * @enum {string}
              */
-            latestStatus:
-                'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELED';
-            events: components['schemas']['ProgressStatusEvent'][];
-            childProgresses: components['schemas']['Progress'][];
+            latestStatus: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED";
+            events: components["schemas"]["ProgressStatusEvent"][];
+            childProgresses: components["schemas"]["Progress"][];
         };
         ProgressStatusEvent: {
             /** Format: uuid */
@@ -150,7 +184,7 @@ export interface components {
              *     - `CANCELED` — user/system canceled it
              * @enum {string}
              */
-            status: 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELED';
+            status: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED";
         };
     };
     responses: never;
@@ -171,7 +205,7 @@ export interface operations {
         /** @description Authentik webhook payload containing the synchronized user information. */
         requestBody: {
             content: {
-                'application/json': components['schemas']['AuthentikEventRequest'];
+                "application/json": components["schemas"]["AuthentikEventRequest"];
             };
         };
         responses: {
@@ -234,7 +268,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                'application/json': components['schemas']['AddChannelRequest'];
+                "application/json": components["schemas"]["AddChannelRequest"];
             };
         };
         responses: {
@@ -244,7 +278,27 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    '*/*': components['schemas']['CommandAcceptedResponse'];
+                    "*/*": components["schemas"]["CommandAcceptedResponse"];
+                };
+            };
+        };
+    };
+    getVideos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VideoPreview"][];
                 };
             };
         };
@@ -266,7 +320,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    '*/*': components['schemas']['GetProgressResponse'];
+                    "*/*": components["schemas"]["GetProgressResponse"];
                 };
             };
         };

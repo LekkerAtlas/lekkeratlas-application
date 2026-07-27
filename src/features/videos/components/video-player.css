@@ -1,0 +1,174 @@
+.video-player {
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background: #000;
+    box-shadow: var(--shadow);
+}
+
+.video-player:fullscreen {
+    display: grid;
+    align-content: center;
+    border: 0;
+    border-radius: 0;
+    background: #000;
+}
+
+.video-player__viewport {
+    position: relative;
+    width: 100%;
+    min-height: 200px;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #000;
+}
+
+.video-player__media,
+.video-player__media > *,
+.video-player__media iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.video-player__media iframe {
+    display: block;
+    border: 0;
+}
+
+.video-player__activity-surface {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: auto;
+}
+
+.video-player--controls-hidden {
+    cursor: none;
+}
+
+.video-player__overlay {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    padding: 4rem 1rem 1rem;
+    color: #fff;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(0, 0, 0, 0.72) 52%,
+        rgba(0, 0, 0, 0.92)
+    );
+    pointer-events: none;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+        opacity 180ms ease,
+        transform 180ms ease;
+}
+
+.video-player--controls-hidden .video-player__overlay {
+    opacity: 0;
+    transform: translateY(0.5rem);
+}
+
+.video-player__controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.video-player__controls button,
+.video-player__controls a,
+.video-player__controls input,
+.video-player__seek {
+    pointer-events: auto;
+}
+
+.video-player--controls-hidden .video-player__controls button,
+.video-player--controls-hidden .video-player__controls a,
+.video-player--controls-hidden .video-player__controls input,
+.video-player--controls-hidden .video-player__seek {
+    pointer-events: none;
+}
+
+.video-player__controls button,
+.video-player__controls a {
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.7rem;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.video-player__controls button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.video-player__seek {
+    width: 100%;
+    margin-bottom: 0.75rem;
+    accent-color: var(--accent);
+}
+
+.video-player__volume {
+    width: 7rem;
+    accent-color: var(--accent);
+}
+
+.video-player__time {
+    min-width: 7rem;
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+}
+
+.video-player__controls-spacer {
+    flex: 1;
+}
+
+.video-player__status {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.72);
+    text-align: center;
+}
+
+.video-player__status--error {
+    color: #fecaca;
+}
+
+@media (max-width: 700px) {
+    .video-player__overlay {
+        padding-inline: 0.75rem;
+    }
+
+    .video-player__controls {
+        flex-wrap: wrap;
+    }
+
+    .video-player__controls-spacer {
+        display: none;
+    }
+
+    .video-player__volume {
+        flex: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .video-player__overlay {
+        transition: none;
+    }
+}
