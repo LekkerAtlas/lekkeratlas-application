@@ -7,6 +7,15 @@ import {
     useRef,
     useState,
 } from 'react';
+import {
+    ExternalLink,
+    Maximize,
+    Minimize,
+    Pause,
+    Play,
+    Volume2,
+    VolumeX,
+} from 'lucide-react';
 
 const controlsInactivityDelayMilliseconds = 2500;
 
@@ -53,6 +62,7 @@ export function VideoPlayerUi({
     > | null>(null);
 
     const [areControlsVisible, setAreControlsVisible] = useState(true);
+    const [isFullscreen, setIsFullscreen] = useState(false);
     const [uiErrorMessage, setUiErrorMessage] = useState<string | null>(null);
 
     const {
@@ -104,6 +114,23 @@ export function VideoPlayerUi({
         return clearControlsHideTimeout;
     }, [isPlaying, scheduleControlsHide, clearControlsHideTimeout]);
 
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(
+                document.fullscreenElement === playerShellRef.current
+            );
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+        return () => {
+            document.removeEventListener(
+                'fullscreenchange',
+                handleFullscreenChange
+            );
+        };
+    }, []);
+
     const togglePlayback = () => {
         if (isPlaying) {
             playbackActions.pause();
@@ -146,7 +173,7 @@ export function VideoPlayerUi({
         setUiErrorMessage(null);
 
         try {
-            if (document.fullscreenElement) {
+            if (document.fullscreenElement === playerShellRef.current) {
                 await document.exitFullscreen();
                 return;
             }
@@ -162,6 +189,12 @@ export function VideoPlayerUi({
     const playerClassName = shouldShowControls
         ? 'video-player video-player--controls-visible'
         : 'video-player video-player--controls-hidden';
+
+    const playbackLabel = isPlaying ? 'Pause' : 'Play';
+    const muteLabel = isMuted ? 'Unmute' : 'Mute';
+    const fullscreenLabel = isFullscreen
+        ? 'Exit fullscreen'
+        : 'Enter fullscreen';
 
     return (
         <div
@@ -198,11 +231,18 @@ export function VideoPlayerUi({
 
                     <div className="video-player__controls">
                         <button
+                            className="video-player__control-button"
                             type="button"
                             onClick={togglePlayback}
                             disabled={!isReady}
+                            aria-label={playbackLabel}
+                            title={playbackLabel}
                         >
-                            {isPlaying ? 'Pause' : 'Play'}
+                            {isPlaying ? (
+                                <Pause aria-hidden="true" />
+                            ) : (
+                                <Play aria-hidden="true" />
+                            )}
                         </button>
 
                         <span className="video-player__time">
@@ -211,11 +251,19 @@ export function VideoPlayerUi({
                         </span>
 
                         <button
+                            className="video-player__control-button"
                             type="button"
                             onClick={toggleMute}
                             disabled={!isReady}
+                            aria-label={muteLabel}
+                            title={muteLabel}
+                            aria-pressed={isMuted}
                         >
-                            {isMuted ? 'Unmute' : 'Mute'}
+                            {isMuted ? (
+                                <VolumeX aria-hidden="true" />
+                            ) : (
+                                <Volume2 aria-hidden="true" />
+                            )}
                         </button>
 
                         <input
@@ -233,20 +281,31 @@ export function VideoPlayerUi({
 
                         {sourceLink && (
                             <a
+                                className="video-player__control-button"
                                 href={sourceLink.href}
                                 target="_blank"
                                 rel="noreferrer"
+                                aria-label={`Open on ${sourceLink.label}`}
+                                title={`Open on ${sourceLink.label}`}
                             >
-                                {sourceLink.label}
+                                <ExternalLink aria-hidden="true" />
                             </a>
                         )}
 
                         <button
+                            className="video-player__control-button"
                             type="button"
                             onClick={() => void toggleFullscreen()}
                             disabled={!isReady}
+                            aria-label={fullscreenLabel}
+                            title={fullscreenLabel}
+                            aria-pressed={isFullscreen}
                         >
-                            Fullscreen
+                            {isFullscreen ? (
+                                <Minimize aria-hidden="true" />
+                            ) : (
+                                <Maximize aria-hidden="true" />
+                            )}
                         </button>
                     </div>
                 </div>

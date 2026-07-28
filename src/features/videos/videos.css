@@ -10,18 +10,43 @@
 .video-browser__empty {
     margin-top: 2rem;
     padding: 2rem;
-    border: 1px dashed var(--border);
-    border-radius: 1rem;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-lg);
     text-align: center;
 }
 
 .video-preview-card {
+    --video-card-border: var(--color-border);
+    --video-card-background: var(--color-background);
+    --video-card-thumbnail-background: color-mix(
+        in srgb,
+        var(--color-heading) 5%,
+        var(--color-background)
+    );
+    --video-card-placeholder-color: var(--color-text);
+    --video-card-type-color: var(--color-accent);
+    --video-card-source-color: var(--color-text);
+    --video-card-source-border: color-mix(
+        in srgb,
+        var(--color-accent) 50%,
+        transparent
+    );
+    --video-card-source-background: color-mix(
+        in srgb,
+        var(--color-accent) 10%,
+        transparent
+    );
+    --video-card-shadow:
+        color-mix(in srgb, var(--color-shadow) 10%, transparent) 0 10px
+            15px -3px,
+        color-mix(in srgb, var(--color-shadow) 5%, transparent) 0 4px 6px -2px;
+
     height: 100%;
     overflow: hidden;
-    border: 1px solid var(--border);
-    border-radius: 1rem;
-    background: var(--bg);
-    box-shadow: var(--shadow);
+    border: 1px solid var(--video-card-border);
+    border-radius: var(--radius-lg);
+    background: var(--video-card-background);
+    box-shadow: var(--video-card-shadow);
     transition:
         transform 160ms ease,
         box-shadow 160ms ease;
@@ -45,7 +70,7 @@
     position: relative;
     aspect-ratio: 16 / 9;
     overflow: hidden;
-    background: var(--code-bg);
+    background: var(--video-card-thumbnail-background);
 }
 
 .video-thumbnail__image {
@@ -61,12 +86,12 @@
     inset: 0;
     display: grid;
     place-items: center;
-    color: var(--text);
+    color: var(--video-card-placeholder-color);
     font-size: 0.85rem;
 }
 
 .video-preview-card__type {
-    color: var(--accent);
+    color: var(--video-card-type-color);
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.06em;
@@ -87,16 +112,16 @@
     gap: 0.5rem;
     margin: 0;
     padding: 0 1.25rem 1.25rem;
-    color: var(--text);
+    color: var(--video-card-source-color);
     font-size: 0.8rem;
     list-style: none;
 }
 
 .video-source-badge {
-    border: 1px solid var(--accent-border);
-    border-radius: 999px;
+    border: 1px solid var(--video-card-source-border);
+    border-radius: var(--radius-pill);
     padding: 0.2rem 0.6rem;
-    background: var(--accent-bg);
+    background: var(--video-card-source-background);
 }
 
 .video-viewer-page__header {

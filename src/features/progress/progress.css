@@ -1,16 +1,116 @@
 .progress-shell {
+    --progress-shell-background: color-mix(
+        in srgb,
+        var(--color-heading) 4%,
+        var(--color-background)
+    );
+    --progress-card-background: var(--color-background);
+    --progress-card-border: color-mix(
+        in srgb,
+        var(--color-heading) 10%,
+        var(--color-background)
+    );
+    --progress-card-shadow: 0 8px 24px
+        color-mix(in srgb, var(--color-shadow) 6%, transparent);
+    --progress-card-shadow-hover: 0 12px 32px
+        color-mix(in srgb, var(--color-shadow) 9%, transparent);
+
+    --progress-text-strong: var(--color-heading);
+    --progress-text-muted: color-mix(
+        in srgb,
+        var(--color-text) 88%,
+        var(--color-background)
+    );
+    --progress-text-subtle: color-mix(
+        in srgb,
+        var(--color-text) 62%,
+        var(--color-background)
+    );
+
+    --progress-event-background: color-mix(
+        in srgb,
+        var(--color-heading) 2%,
+        var(--color-background)
+    );
+    --progress-event-border: color-mix(
+        in srgb,
+        var(--color-heading) 6%,
+        var(--color-background)
+    );
+    --progress-status-ring: var(--color-background);
+
+    --progress-queued-border: color-mix(
+        in srgb,
+        var(--color-heading) 16%,
+        var(--color-background)
+    );
+    --progress-queued-background: var(--progress-shell-background);
+    --progress-queued-text: color-mix(
+        in srgb,
+        var(--color-heading) 70%,
+        var(--color-background)
+    );
+
+    --progress-running-border: color-mix(
+        in srgb,
+        var(--color-info) 40%,
+        var(--color-background)
+    );
+    --progress-running-background: color-mix(
+        in srgb,
+        var(--color-info) 15%,
+        var(--color-background)
+    );
+    --progress-running-text: var(--color-info);
+
+    --progress-completed-border: color-mix(
+        in srgb,
+        var(--color-success) 40%,
+        var(--color-background)
+    );
+    --progress-completed-background: color-mix(
+        in srgb,
+        var(--color-success) 15%,
+        var(--color-background)
+    );
+    --progress-completed-text: var(--color-success);
+
+    --progress-failed-border: color-mix(
+        in srgb,
+        var(--color-danger) 40%,
+        var(--color-background)
+    );
+    --progress-failed-background: color-mix(
+        in srgb,
+        var(--color-danger) 15%,
+        var(--color-background)
+    );
+    --progress-failed-text: var(--color-danger);
+
+    --progress-canceled-border: color-mix(
+        in srgb,
+        var(--color-warning) 40%,
+        var(--color-background)
+    );
+    --progress-canceled-background: color-mix(
+        in srgb,
+        var(--color-warning) 15%,
+        var(--color-background)
+    );
+    --progress-canceled-text: var(--color-warning);
+
     margin-top: 1.5rem;
     padding: 1rem;
-    border-radius: 24px;
-    background: #f5f5f5;
+    border-radius: var(--radius-2xl);
+    background: var(--progress-shell-background);
 }
 
 .progress-card {
-    border: 1px solid #e5e5e5;
-    border-radius: 20px;
-    background: white;
     padding: 1.25rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--progress-card-border);
+    border-radius: var(--radius-xl);
+    background: var(--progress-card-background);
+    box-shadow: var(--progress-card-shadow);
     transition:
         box-shadow 160ms ease,
         transform 160ms ease;
@@ -18,7 +118,7 @@
 
 .progress-card:hover {
     transform: translateY(-1px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.09);
+    box-shadow: var(--progress-card-shadow-hover);
 }
 
 .progress-card__header {
@@ -29,7 +129,7 @@
 
 .progress-card__label {
     margin: 0;
-    color: #737373;
+    color: var(--progress-text-muted);
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -38,8 +138,8 @@
 
 .progress-card__id {
     margin: 0.35rem 0 0;
-    color: #a3a3a3;
-    font-family: monospace;
+    color: var(--progress-text-subtle);
+    font-family: var(--font-family-monospace);
     font-size: 0.75rem;
 }
 
@@ -68,34 +168,34 @@
     width: 1px;
     flex: 1;
     margin-top: 0.5rem;
-    background: #e5e5e5;
+    background: var(--progress-card-border);
 }
 
 .progress-event__content {
     flex: 1;
-    border: 1px solid #f0f0f0;
-    border-radius: 14px;
-    background: #fafafa;
     padding: 0.75rem 1rem;
+    border: 1px solid var(--progress-event-border);
+    border-radius: var(--radius-md);
+    background: var(--progress-event-background);
 }
 
 .progress-event__message {
     margin: 0;
-    color: #171717;
+    color: var(--progress-text-strong);
     font-size: 0.9rem;
     font-weight: 600;
 }
 
 .progress-event__status {
     margin: 0.25rem 0 0;
-    color: #737373;
+    color: var(--progress-text-muted);
     font-size: 0.75rem;
 }
 
 .progress-status-badge {
-    border: 1px solid;
-    border-radius: 999px;
     padding: 0.25rem 0.75rem;
+    border: 1px solid;
+    border-radius: var(--radius-pill);
     font-size: 0.75rem;
     font-weight: 700;
     white-space: nowrap;
@@ -105,38 +205,38 @@
     width: 0.75rem;
     height: 0.75rem;
     margin-top: 0.25rem;
-    border-radius: 999px;
-    box-shadow: 0 0 0 4px white;
+    border-radius: var(--radius-pill);
+    box-shadow: 0 0 0 4px var(--progress-status-ring);
 }
 
 .progress-status--queued {
-    border-color: #d4d4d4;
-    background: #f5f5f5;
-    color: #525252;
+    border-color: var(--progress-queued-border);
+    background: var(--progress-queued-background);
+    color: var(--progress-queued-text);
 }
 
 .progress-status--running {
-    border-color: #93c5fd;
-    background: #dbeafe;
-    color: #1d4ed8;
+    border-color: var(--progress-running-border);
+    background: var(--progress-running-background);
+    color: var(--progress-running-text);
 }
 
 .progress-status--completed {
-    border-color: #86efac;
-    background: #dcfce7;
-    color: #15803d;
+    border-color: var(--progress-completed-border);
+    background: var(--progress-completed-background);
+    color: var(--progress-completed-text);
 }
 
 .progress-status--failed {
-    border-color: #fca5a5;
-    background: #fee2e2;
-    color: #b91c1c;
+    border-color: var(--progress-failed-border);
+    background: var(--progress-failed-background);
+    color: var(--progress-failed-text);
 }
 
 .progress-status--canceled {
-    border-color: #fde68a;
-    background: #fef3c7;
-    color: #a16207;
+    border-color: var(--progress-canceled-border);
+    background: var(--progress-canceled-background);
+    color: var(--progress-canceled-text);
 }
 
 .progress-children {
@@ -145,18 +245,18 @@
 
 .progress-children__summary {
     cursor: pointer;
-    border: 1px solid #e5e5e5;
-    border-radius: 14px;
-    background: #fafafa;
     padding: 0.75rem 1rem;
+    border: 1px solid var(--progress-card-border);
+    border-radius: var(--radius-md);
+    background: var(--progress-event-background);
     font-size: 0.9rem;
     font-weight: 700;
 }
 
 .progress-children__content {
-    margin-top: 1rem;
-    padding-left: 1rem;
-    border-left: 2px solid #e5e5e5;
     display: grid;
     gap: 1rem;
+    margin-top: 1rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--progress-card-border);
 }
