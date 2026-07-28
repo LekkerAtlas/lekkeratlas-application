@@ -2,12 +2,12 @@
 
 :root {
     /* Typography */
-    --font-family-body: 'Inter Variable', Inter, system-ui, 'Segoe UI',
-        sans-serif;
-    --font-family-heading: 'Inter Variable', Inter, system-ui, 'Segoe UI',
-        sans-serif;
-    --font-family-monospace: ui-monospace, 'SFMono-Regular', Consolas,
-        monospace;
+    --font-family-body:
+        'Inter Variable', Inter, system-ui, 'Segoe UI', sans-serif;
+    --font-family-heading:
+        'Inter Variable', Inter, system-ui, 'Segoe UI', sans-serif;
+    --font-family-monospace:
+        ui-monospace, 'SFMono-Regular', Consolas, monospace;
 
     --font-size-root: 17px;
     --font-size-root-compact: 15px;
