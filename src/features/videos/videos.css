@@ -24,6 +24,12 @@
         var(--color-background)
     );
     --video-card-placeholder-color: var(--color-text);
+    --video-card-duration-color: var(--color-light);
+    --video-card-duration-background: color-mix(
+        in srgb,
+        var(--color-dark) 82%,
+        transparent
+    );
     --video-card-type-color: var(--color-accent);
     --video-card-source-color: var(--color-text);
     --video-card-source-border: color-mix(
@@ -78,6 +84,24 @@
     height: 100%;
     display: block;
     object-fit: cover;
+}
+
+.video-thumbnail__duration {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    z-index: 1;
+    padding: 0.15rem 0.35rem;
+    border-radius: var(--radius-xs);
+    color: var(--video-card-duration-color);
+    background: var(--video-card-duration-background);
+    font-family: var(--font-family-monospace);
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    pointer-events: none;
 }
 
 .video-thumbnail--placeholder::after {

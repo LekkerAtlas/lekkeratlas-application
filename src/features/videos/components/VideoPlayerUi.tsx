@@ -1,6 +1,8 @@
 import '@/features/videos/components/video-player.css';
 import {
     type ChangeEventHandler,
+    type CSSProperties,
+    type KeyboardEventHandler,
     type ReactNode,
     useCallback,
     useEffect,
@@ -18,6 +20,12 @@ import {
 } from 'lucide-react';
 
 const controlsInactivityDelayMilliseconds = 2500;
+const seekStepSeconds = 10;
+const volumeStep = 5;
+
+type TimelineStyle = CSSProperties & {
+    '--video-player-progress': string;
+};
 
 export type VideoPlaybackState = {
     isReady: boolean;
@@ -139,6 +147,26 @@ export function VideoPlayerUi({
         }
     };
 
+    const seekBy = (seconds: number) => {
+        const unclampedTime = Math.max(0, currentTime + seconds);
+        const nextTime =
+            duration > 0 ? Math.min(unclampedTime, duration) : unclampedTime;
+
+        playbackActions.seekTo(nextTime);
+    };
+
+    const setPlaybackVolume = (nextVolume: number) => {
+        const clampedVolume = clamp(nextVolume, 0, 100);
+
+        playbackActions.setVolume(clampedVolume);
+
+        if (clampedVolume === 0) {
+            playbackActions.mute();
+        } else {
+            playbackActions.unmute();
+        }
+    };
+
     const handleSeek: ChangeEventHandler<HTMLInputElement> = (event) => {
         playbackActions.seekTo(Number(event.currentTarget.value));
     };
@@ -146,15 +174,7 @@ export function VideoPlayerUi({
     const handleVolumeChange: ChangeEventHandler<HTMLInputElement> = (
         event
     ) => {
-        const nextVolume = Number(event.currentTarget.value);
-
-        playbackActions.setVolume(nextVolume);
-
-        if (nextVolume === 0) {
-            playbackActions.mute();
-        } else {
-            playbackActions.unmute();
-        }
+        setPlaybackVolume(Number(event.currentTarget.value));
     };
 
     const toggleMute = () => {
@@ -166,6 +186,74 @@ export function VideoPlayerUi({
             playbackActions.unmute();
         } else {
             playbackActions.mute();
+        }
+    };
+
+    const handleKeyboardShortcut: KeyboardEventHandler<HTMLDivElement> = (
+        event
+    ) => {
+        if (isInteractiveKeyboardTarget(event.target)) {
+            return;
+        }
+
+        const key = event.key.toLowerCase();
+        const isSpaceKey = event.code === 'Space' || key === ' ';
+
+        if (isSpaceKey && event.repeat) {
+            return;
+        }
+
+        const isSupportedKey =
+            isSpaceKey ||
+            key === 'arrowleft' ||
+            key === 'l' ||
+            key === 'arrowright' ||
+            key === 'r' ||
+            key === 'arrowup' ||
+            key === 'u' ||
+            key === 'arrowdown' ||
+            key === 'd';
+
+        if (!isSupportedKey) {
+            return;
+        }
+
+        event.preventDefault();
+        revealControls();
+
+        if (!isReady) {
+            return;
+        }
+
+        switch (key) {
+            case ' ':
+                togglePlayback();
+                break;
+            case 'arrowleft':
+            case 'l':
+                seekBy(-seekStepSeconds);
+                break;
+            case 'arrowright':
+            case 'r':
+                seekBy(seekStepSeconds);
+                break;
+            case 'arrowup':
+            case 'u':
+                setPlaybackVolume(volume + volumeStep);
+                break;
+            case 'arrowdown':
+            case 'd':
+                setPlaybackVolume(volume - volumeStep);
+                break;
+        }
+    };
+
+    const handlePaneClick = () => {
+        playerShellRef.current?.focus();
+        revealControls();
+
+        if (isReady) {
+            togglePlayback();
         }
     };
 
@@ -196,29 +284,43 @@ export function VideoPlayerUi({
         ? 'Exit fullscreen'
         : 'Enter fullscreen';
 
+    const playbackProgress =
+        duration > 0 ? clamp((currentTime / duration) * 100, 0, 100) : 0;
+
+    const timelineStyle: TimelineStyle = {
+        '--video-player-progress': `${playbackProgress}%`,
+    };
+
     return (
         <div
             ref={playerShellRef}
             className={playerClassName}
+            tabIndex={0}
             aria-label={`Video player for ${title}`}
+            aria-keyshortcuts="Space ArrowLeft ArrowRight ArrowUp ArrowDown L R U D"
             onPointerMove={revealControls}
             onPointerDown={revealControls}
             onFocusCapture={revealControls}
-            onKeyDown={revealControls}
+            onKeyDown={handleKeyboardShortcut}
         >
             <div className="video-player__viewport">
                 <div className="video-player__media">{children}</div>
 
-                <div
+                <button
                     className="video-player__activity-surface"
+                    type="button"
+                    tabIndex={-1}
+                    onClick={handlePaneClick}
                     onPointerMove={revealControls}
                     onPointerDown={revealControls}
-                    aria-hidden="true"
+                    aria-label={playbackLabel}
+                    title={playbackLabel}
                 />
 
                 <div className="video-player__overlay">
                     <input
                         className="video-player__seek"
+                        style={timelineStyle}
                         type="range"
                         min={0}
                         max={Math.max(duration, 0)}
@@ -324,6 +426,17 @@ export function VideoPlayerUi({
             </div>
         </div>
     );
+}
+
+function isInteractiveKeyboardTarget(target: EventTarget | null) {
+    return (
+        target instanceof HTMLElement &&
+        Boolean(target.closest('button, a, input, select, textarea'))
+    );
+}
+
+function clamp(value: number, minimum: number, maximum: number) {
+    return Math.min(Math.max(value, minimum), maximum);
 }
 
 function formatPlaybackTime(value: number) {

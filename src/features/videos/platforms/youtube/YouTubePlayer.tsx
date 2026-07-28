@@ -172,9 +172,9 @@ export function YouTubePlayer({
             playbackActions={playbackActions}
             sourceLink={{
                 label: 'YouTube',
-                href: `https://www.youtube.com/watch?v=${encodeURIComponent(
+                href: `https://youtu.be/${encodeURIComponent(
                     source.id
-                )}`,
+                )}?t=${currentTime.toFixed()}`,
             }}
         >
             <div ref={playerMountRef} />

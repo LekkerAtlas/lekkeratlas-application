@@ -22,6 +22,11 @@
         var(--video-player-foreground) 30%,
         transparent
     );
+    --video-player-timeline-background: color-mix(
+        in srgb,
+        var(--video-player-foreground) 28%,
+        transparent
+    );
     --video-player-status-background: color-mix(
         in srgb,
         var(--video-player-background) 72%,
@@ -84,6 +89,12 @@
     position: absolute;
     inset: 0;
     z-index: 1;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
     pointer-events: auto;
 }
 
@@ -178,8 +189,59 @@
 
 .video-player__seek {
     width: 100%;
+    height: 0.375rem;
     margin-bottom: 0.75rem;
-    accent-color: var(--video-player-accent);
+    border-radius: var(--radius-pill);
+    appearance: none;
+    background: linear-gradient(
+        to right,
+        var(--video-player-accent) 0,
+        var(--video-player-accent) var(--video-player-progress),
+        var(--video-player-timeline-background) var(--video-player-progress),
+        var(--video-player-timeline-background) 100%
+    );
+    cursor: pointer;
+}
+
+.video-player__seek::-webkit-slider-runnable-track {
+    height: 0.375rem;
+    border-radius: var(--radius-pill);
+    background: transparent;
+}
+
+.video-player__seek::-webkit-slider-thumb {
+    width: 1rem;
+    height: 1rem;
+    margin-top: -0.3125rem;
+    border: 2px solid var(--video-player-foreground);
+    border-radius: var(--radius-pill);
+    appearance: none;
+    background: var(--video-player-accent);
+}
+
+.video-player__seek::-moz-range-track {
+    height: 0.375rem;
+    border-radius: var(--radius-pill);
+    background: transparent;
+}
+
+.video-player__seek::-moz-range-progress {
+    height: 0.375rem;
+    border-radius: var(--radius-pill);
+    background: var(--video-player-accent);
+}
+
+.video-player__seek::-moz-range-thumb {
+    width: 0.875rem;
+    height: 0.875rem;
+    border: 2px solid var(--video-player-foreground);
+    border-radius: var(--radius-pill);
+    background: var(--video-player-accent);
+}
+
+.video-player__seek:focus-visible {
+    outline: 2px solid var(--video-player-foreground);
+    outline-offset: 4px;
 }
 
 .video-player__volume {
