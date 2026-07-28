@@ -10,46 +10,46 @@
 
     --font-size-root: 18px;
     --font-size-root-compact: 16px;
-    --font-size-heading-1: 60px;
-    --font-size-heading-1-compact: 40px;
-    --font-size-heading-2: 26px;
-    --font-size-heading-2-compact: 21px;
+    --font-size-heading-1: 54px;
+    --font-size-heading-1-compact: 36px;
+    --font-size-heading-2: 24px;
+    --font-size-heading-2-compact: 20px;
     --font-size-code: 15px;
 
-    --font-weight-heading: 700;
-    --line-height-body: 148%;
-    --line-height-heading-2: 116%;
+    --font-weight-heading: 600;
+    --line-height-body: 150%;
+    --line-height-heading-2: 122%;
     --line-height-code: 135%;
-    --letter-spacing-body: 0.12px;
-    --letter-spacing-heading-1: -2px;
-    --letter-spacing-heading-2: -0.4px;
+    --letter-spacing-body: 0.1px;
+    --letter-spacing-heading-1: -1.4px;
+    --letter-spacing-heading-2: -0.2px;
 
     /* Layout and shape */
-    --content-max-width: 1180px;
-    --radius-xs: 6px;
-    --radius-sm: 0.75rem;
-    --radius-md: 1rem;
-    --radius-lg: 1.25rem;
-    --radius-xl: 1.5rem;
-    --radius-2xl: 1.75rem;
+    --content-max-width: 1126px;
+    --radius-xs: 4px;
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
+    --radius-2xl: 1.5rem;
     --radius-pill: 999px;
 
     /* Global color foundation */
     --color-light: #ffffff;
-    --color-dark: #241922;
-    --color-shadow: #241922;
+    --color-dark: #172033;
+    --color-shadow: #172033;
 
-    --color-canvas: #fff8f4;
+    --color-canvas: #f7f6f2;
     --color-background: #ffffff;
-    --color-text: #6f5e69;
-    --color-heading: #241922;
-    --color-border: #e9dde3;
-    --color-accent: #e94f64;
+    --color-text: #5b6475;
+    --color-heading: #172033;
+    --color-border: #dde1e7;
+    --color-accent: #5b5bd6;
 
-    --color-info: #7357d9;
-    --color-success: #238a64;
-    --color-warning: #c16c16;
-    --color-danger: #ca3853;
+    --color-info: #2878b8;
+    --color-success: #25866a;
+    --color-warning: #b56a10;
+    --color-danger: #c2414b;
 
     font: var(--font-size-root) / var(--line-height-body)
         var(--font-family-body);
@@ -69,17 +69,17 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --color-canvas: #151116;
-        --color-background: #211a21;
-        --color-text: #c5b5bf;
-        --color-heading: #fff5f7;
-        --color-border: #433441;
-        --color-accent: #ff7c8d;
+        --color-canvas: #11151d;
+        --color-background: #191e28;
+        --color-text: #aab2c0;
+        --color-heading: #f0f2f6;
+        --color-border: #303745;
+        --color-accent: #9292ff;
 
-        --color-info: #a896ff;
-        --color-success: #58cca0;
-        --color-warning: #f3b45f;
-        --color-danger: #ff8298;
+        --color-info: #69b7ec;
+        --color-success: #57c5a1;
+        --color-warning: #f3b766;
+        --color-danger: #ff858c;
     }
 }
 
@@ -109,18 +109,18 @@ h2 {
 }
 
 h1 {
-    margin: 36px 0;
+    margin: 32px 0;
     font-size: var(--font-size-heading-1);
     letter-spacing: var(--letter-spacing-heading-1);
 
     @media (max-width: 1024px) {
-        margin: 22px 0;
+        margin: 20px 0;
         font-size: var(--font-size-heading-1-compact);
     }
 }
 
 h2 {
-    margin: 0 0 10px;
+    margin: 0 0 8px;
     font-size: var(--font-size-heading-2);
     line-height: var(--line-height-heading-2);
     letter-spacing: var(--letter-spacing-heading-2);
@@ -145,7 +145,7 @@ code,
 code {
     --code-background: color-mix(
         in srgb,
-        var(--color-accent) 8%,
+        var(--color-heading) 5%,
         var(--color-background)
     );
 
