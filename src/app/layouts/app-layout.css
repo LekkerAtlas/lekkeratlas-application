@@ -5,15 +5,25 @@
 }
 
 .app-navbar {
+    --app-navbar-border-color: var(--color-border);
+    --app-navbar-brand-color: var(--color-heading);
+    --app-navbar-link-color: var(--color-text);
+    --app-navbar-link-active-color: var(--color-heading);
+    --app-navbar-link-active-background: color-mix(
+        in srgb,
+        var(--color-accent) 12%,
+        transparent
+    );
+
     display: flex;
     align-items: center;
     gap: 1.5rem;
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--border, #e5e4e7);
+    border-bottom: 1px solid var(--app-navbar-border-color);
 }
 
 .app-navbar__brand {
-    color: var(--text-h, #08060d);
+    color: var(--app-navbar-brand-color);
     font-weight: 700;
     text-decoration: none;
 }
@@ -26,15 +36,15 @@
 
 .app-navbar__link {
     padding: 0.5rem 0.75rem;
-    border-radius: 0.5rem;
-    color: var(--text, #6b6375);
+    border-radius: var(--radius-sm);
+    color: var(--app-navbar-link-color);
     text-decoration: none;
 }
 
 .app-navbar__link:hover,
 .app-navbar__link--active {
-    color: var(--text-h, #08060d);
-    background: var(--accent-bg, rgba(170, 59, 255, 0.1));
+    color: var(--app-navbar-link-active-color);
+    background: var(--app-navbar-link-active-background);
 }
 
 .app-navbar__session {
@@ -43,7 +53,7 @@
 
 .app-content {
     width: 100%;
-    max-width: 1126px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
     padding: 2rem;
     box-sizing: border-box;
