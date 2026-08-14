@@ -1,4 +1,4 @@
 dist
 node_modules
 pnpm-lock.yaml
-src/lib/api/schema.ts
+src/lib/api/schema.d.ts

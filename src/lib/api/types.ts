@@ -1,6 +1,6 @@
 import type { paths } from '@/lib/api/schema';
 
-type PathKey = keyof paths & string;
+type PathKey = Extract<keyof paths, string>;
 
 type OpenApiPathToTemplate<Path extends string> =
     Path extends `${infer Start}{${string}}${infer End}`

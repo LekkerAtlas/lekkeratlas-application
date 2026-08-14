@@ -73,15 +73,6 @@ export function VideoPlayerTimeline({
         setTimelinePreview(createTimelinePreview(nextTime, duration));
     };
 
-    const handleSeekPointerDown: PointerEventHandler<HTMLInputElement> = (
-        event
-    ) => {
-        const nextTime = Number(event.currentTarget.value);
-
-        setScrubTime(nextTime);
-        setTimelinePreview(createTimelinePreview(nextTime, duration));
-    };
-
     const handleSeekPointerUp: PointerEventHandler<HTMLInputElement> = (
         event
     ) => {
@@ -142,7 +133,6 @@ export function VideoPlayerTimeline({
                 step={0.1}
                 value={Math.min(displayedSeekTime, duration || 0)}
                 onChange={handleSeek}
-                onPointerDown={handleSeekPointerDown}
                 onPointerUp={handleSeekPointerUp}
                 onPointerCancel={handleSeekPointerCancel}
                 disabled={!isReady || duration <= 0}
