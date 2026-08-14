@@ -139,14 +139,15 @@ export interface components {
         VideoPreview: {
             /** Format: uuid */
             contentId: string;
+            creatorInfo: components["schemas"]["CreatorInfo"];
+            /** @enum {string} */
+            videoType: "LIVE_STREAM" | "LIVE_STREAM_CLIP" | "OFFICIAL_VIDEO" | "FAN_MADE_VIDEO" | "LEKKER_SPELEN_RELATED" | "OTHER";
             title: string;
             /** Format: int32 */
             durationSeconds: number;
             /** Format: date-time */
             publishedAt: string;
-            creatorInfo: components["schemas"]["CreatorInfo"];
-            /** @enum {string} */
-            videoType: "LIVE_STREAM" | "LIVE_STREAM_CLIP" | "OFFICIAL_VIDEO" | "FAN_MADE_VIDEO" | "LEKKER_SPELEN_RELATED" | "OTHER";
+            isBehindPaywall: boolean;
             videoSources: components["schemas"]["VideoSource"][];
         };
         VideoSource: {

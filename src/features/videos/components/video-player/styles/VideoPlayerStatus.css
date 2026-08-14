@@ -1,0 +1,26 @@
+.video-player__status {
+    --video-player-status-background: color-mix(
+        in srgb,
+        var(--video-player-background) 72%,
+        transparent
+    );
+    --video-player-error: color-mix(
+        in srgb,
+        var(--color-danger) 35%,
+        var(--video-player-foreground)
+    );
+
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    color: var(--video-player-foreground);
+    background: var(--video-player-status-background);
+    text-align: center;
+}
+
+.video-player__status--error {
+    color: var(--video-player-error);
+}

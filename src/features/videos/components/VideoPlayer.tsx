@@ -1,16 +1,11 @@
+import type { VideoPlayerAdapterProps } from '@/features/videos/components/video-player/types/videoPlayerTypes';
 import { YouTubePlayer } from '@/features/videos/platforms/youtube/YouTubePlayer';
 import '@/features/videos/videos.css';
 import type {
     VideoPreview,
-    VideoSource,
     VideoSourcePlatform,
 } from '@/features/videos/videoTypes';
 import type { ComponentType } from 'react';
-
-export type VideoPlayerAdapterProps = {
-    source: VideoSource;
-    title: string;
-};
 
 type VideoPlayerAdapter = ComponentType<VideoPlayerAdapterProps>;
 
