@@ -14,6 +14,136 @@ const prettierIgnorePath = fileURLToPath(
     new URL('.prettierignore', import.meta.url)
 );
 
+/** @param {string} line */
+function isBlankStarLine(line) {
+    return /^\s*\*\s*$/.test(line);
+}
+
+/** @param {string} line */
+function isMissingSpaceAfterStar(line) {
+    return /^\s*\*\S/.test(line);
+}
+
+function reportUseJsdoc(context, comment) {
+    context.report({
+        loc: comment.loc,
+        messageId: 'useJsdoc',
+        fix(fixer) {
+            return fixer.insertTextAfterRange(
+                [comment.range[0], comment.range[0] + 1],
+                '*'
+            );
+        },
+    });
+}
+
+function findMissingSpaceLineIndex(lines) {
+    return lines.findIndex((line, index) => {
+        if (index === 0 || index === lines.length - 1) {
+            return false;
+        }
+
+        const normalizedLine = line.replace(/\r$/, '');
+
+        return (
+            !isBlankStarLine(normalizedLine) &&
+            isMissingSpaceAfterStar(normalizedLine)
+        );
+    });
+}
+
+function reportMissingSpaceAfterStar(context, comment, lines) {
+    const lineIndex = findMissingSpaceLineIndex(lines);
+
+    if (lineIndex === -1) {
+        return;
+    }
+
+    context.report({
+        loc: comment.loc,
+        messageId: 'missingSpaceAfterStar',
+        fix(fixer) {
+            const updatedLines = [...lines];
+            updatedLines[lineIndex] = updatedLines[lineIndex].replace(
+                /^(\s*\*)/,
+                '$1 '
+            );
+
+            return fixer.replaceTextRange(
+                comment.range,
+                updatedLines.join('\n')
+            );
+        },
+    });
+}
+
+function reportLeadingBlankLine(context, comment, lines) {
+    const firstInnerLine = lines[1]?.replace(/\r$/, '');
+
+    if (!firstInnerLine || !isBlankStarLine(firstInnerLine)) {
+        return;
+    }
+
+    context.report({
+        loc: comment.loc,
+        messageId: 'noLeadingBlank',
+        fix(fixer) {
+            const rebuilt = [lines[0], ...lines.slice(2)].join('\n');
+
+            return fixer.replaceTextRange(comment.range, rebuilt);
+        },
+    });
+}
+
+function reportTrailingBlankLine(context, comment, lines) {
+    const lastInnerLine = lines.at(-2)?.replace(/\r$/, '');
+
+    if (!lastInnerLine || !isBlankStarLine(lastInnerLine)) {
+        return;
+    }
+
+    context.report({
+        loc: comment.loc,
+        messageId: 'noTrailingBlank',
+        fix(fixer) {
+            const rebuilt = [...lines.slice(0, -2), lines.at(-1)].join('\n');
+
+            return fixer.replaceTextRange(comment.range, rebuilt);
+        },
+    });
+}
+
+function inspectDocumentationComment(context, sourceCode, comment) {
+    if (comment.type !== 'Block') {
+        return;
+    }
+
+    const raw = sourceCode.getText(comment);
+
+    if (!raw.includes('\n')) {
+        return;
+    }
+
+    if (raw.startsWith('/*') && !raw.startsWith('/**')) {
+        reportUseJsdoc(context, comment);
+        return;
+    }
+
+    if (!raw.startsWith('/**')) {
+        return;
+    }
+
+    const lines = raw.split('\n');
+
+    if (lines.length < 3) {
+        return;
+    }
+
+    reportMissingSpaceAfterStar(context, comment, lines);
+    reportLeadingBlankLine(context, comment, lines);
+    reportTrailingBlankLine(context, comment, lines);
+}
+
 export default defineConfig([
     includeIgnoreFile(prettierIgnorePath),
     { ignores: ['dist'] },
@@ -87,187 +217,14 @@ export default defineConfig([
                         create(context) {
                             const sourceCode = context.sourceCode;
 
-                            /** @param {string} line */
-                            function isBlankStarLine(line) {
-                                return /^\s*\*\s*$/.test(line);
-                            }
-
-                            /** @param {string} line */
-                            function isMissingSpaceAfterStar(line) {
-                                // Matches lines like: " *text" or "\t*text" but NOT " * text" and NOT a blank star line.
-                                return /^\s*\*\S/.test(line);
-                            }
-
                             return {
                                 Program() {
-                                    const comments =
-                                        sourceCode.getAllComments();
-                                    for (const c of comments) {
-                                        if (c.type !== 'Block') continue;
-
-                                        const raw = sourceCode.getText(c);
-
-                                        // Only enforce for multi-line block comments.
-                                        if (!raw.includes('\n')) continue;
-
-                                        // Enforce `/**` instead of `/*` for multi-line doc-style blocks.
-                                        if (
-                                            raw.startsWith('/*') &&
-                                            !raw.startsWith('/**')
-                                        ) {
-                                            context.report({
-                                                loc: c.loc,
-                                                messageId: 'useJsdoc',
-                                                fix(fixer) {
-                                                    // Turn `/*` into `/**` by inserting one `*` after `/`.
-                                                    return fixer.insertTextAfterRange(
-                                                        [
-                                                            c.range[0],
-                                                            c.range[0] + 1,
-                                                        ],
-                                                        '*'
-                                                    );
-                                                },
-                                            });
-                                            continue;
-                                        }
-
-                                        // Enforce no blank padding lines at start/end of JSDoc blocks.
-                                        if (raw.startsWith('/**')) {
-                                            const lines = raw.split('\n');
-                                            // lines[0] is `/**` (possibly with trailing text, but in our style it should not).
-                                            // last line is `*/` (possibly prefixed with spaces).
-
-                                            if (lines.length >= 3) {
-                                                const firstInner =
-                                                    lines[1].replace(/\r$/, '');
-                                                const lastInner = lines[
-                                                    lines.length - 2
-                                                ].replace(/\r$/, '');
-
-                                                // Enforce `* text` spacing: disallow `*text` on non-empty lines.
-                                                for (
-                                                    let i = 1;
-                                                    i < lines.length - 1;
-                                                    i++
-                                                ) {
-                                                    const line = lines[
-                                                        i
-                                                    ].replace(/\r$/, '');
-
-                                                    if (isBlankStarLine(line))
-                                                        continue;
-                                                    if (
-                                                        !isMissingSpaceAfterStar(
-                                                            line
-                                                        )
-                                                    )
-                                                        continue;
-
-                                                    context.report({
-                                                        loc: c.loc,
-                                                        messageId:
-                                                            'missingSpaceAfterStar',
-                                                        fix(fixer) {
-                                                            // Insert a single space after the first `*` on this line.
-                                                            const updated = [
-                                                                ...lines,
-                                                            ];
-                                                            updated[i] =
-                                                                updated[
-                                                                    i
-                                                                ].replace(
-                                                                    /^(\s*\*)/,
-                                                                    '$1 '
-                                                                );
-                                                            return fixer.replaceTextRange(
-                                                                c.range,
-                                                                updated.join(
-                                                                    '\n'
-                                                                )
-                                                            );
-                                                        },
-                                                    });
-
-                                                    // Avoid multiple overlapping fixes on the same comment in one pass.
-                                                    break;
-                                                }
-
-                                                if (
-                                                    isBlankStarLine(firstInner)
-                                                ) {
-                                                    context.report({
-                                                        loc: c.loc,
-                                                        messageId:
-                                                            'noLeadingBlank',
-                                                        fix(fixer) {
-                                                            // Remove the first inner blank `*` line (including its newline)
-                                                            const start =
-                                                                c.range[0];
-                                                            const text =
-                                                                sourceCode.getText(
-                                                                    c
-                                                                );
-                                                            const lines =
-                                                                text.split(
-                                                                    '\n'
-                                                                );
-
-                                                            // Rebuild without the first inner line
-                                                            const rebuilt = [
-                                                                lines[0],
-                                                                ...lines.slice(
-                                                                    2
-                                                                ),
-                                                            ].join('\n');
-                                                            return fixer.replaceTextRange(
-                                                                c.range,
-                                                                rebuilt
-                                                            );
-                                                        },
-                                                    });
-                                                }
-
-                                                if (
-                                                    isBlankStarLine(lastInner)
-                                                ) {
-                                                    context.report({
-                                                        loc: c.loc,
-                                                        messageId:
-                                                            'noTrailingBlank',
-                                                        fix(fixer) {
-                                                            // Remove the last inner blank `*` line (right before `*/`)
-                                                            const text =
-                                                                sourceCode.getText(
-                                                                    c
-                                                                );
-                                                            const lines =
-                                                                text.split(
-                                                                    '\n'
-                                                                );
-
-                                                            // Rebuild without the last inner line
-                                                            const rebuilt = [
-                                                                ...lines.slice(
-                                                                    0,
-                                                                    lines.length -
-                                                                        2
-                                                                ),
-                                                                lines[
-                                                                    lines.length -
-                                                                        1
-                                                                ],
-                                                            ].join('\n');
-
-                                                            return fixer.replaceTextRange(
-                                                                c.range,
-                                                                rebuilt
-                                                            );
-                                                        },
-                                                    });
-                                                }
-                                            }
-                                        }
+                                    for (const comment of sourceCode.getAllComments()) {
+                                        inspectDocumentationComment(
+                                            context,
+                                            sourceCode,
+                                            comment
+                                        );
                                     }
                                 },
                             };

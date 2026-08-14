@@ -251,7 +251,6 @@ export function VideoPlayerUi({
     }, [clearPaneClickTimeout]);
 
     const handlePaneClick = () => {
-        playerShellRef.current?.focus();
         revealControls();
         clearPaneClickTimeout();
 
@@ -265,7 +264,6 @@ export function VideoPlayerUi({
     };
 
     const handlePaneDoubleClick = () => {
-        playerShellRef.current?.focus();
         revealControls();
         clearPaneClickTimeout();
 
@@ -284,7 +282,6 @@ export function VideoPlayerUi({
         <div
             ref={playerShellRef}
             className={playerClassName}
-            tabIndex={0}
             aria-label={`Video player for ${title}`}
             aria-keyshortcuts="Space K M F ArrowLeft ArrowRight ArrowUp ArrowDown"
             onPointerMove={revealControls}

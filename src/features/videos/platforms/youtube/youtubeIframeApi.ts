@@ -50,7 +50,7 @@ export type YouTubeIframeApi = {
     };
 };
 
-type YouTubeWindow = Window & {
+type YouTubeGlobal = typeof globalThis & {
     YT?: YouTubeIframeApi;
     onYouTubeIframeAPIReady?: () => void;
 };
@@ -59,7 +59,7 @@ const iframeApiUrl = 'https://www.youtube.com/iframe_api';
 let iframeApiPromise: Promise<YouTubeIframeApi> | null = null;
 
 export function loadYouTubeIframeApi(): Promise<YouTubeIframeApi> {
-    const youtubeWindow = window as YouTubeWindow;
+    const youtubeWindow: YouTubeGlobal = globalThis;
 
     if (youtubeWindow.YT?.Player) {
         return Promise.resolve(youtubeWindow.YT);

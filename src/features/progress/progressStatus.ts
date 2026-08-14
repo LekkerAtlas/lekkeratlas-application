@@ -1,10 +1,10 @@
 import type { QueueJobProgressStatus } from './progressTypes';
 
-const terminalStatuses: readonly QueueJobProgressStatus[] = [
+const terminalStatuses = new Set<QueueJobProgressStatus>([
     'COMPLETED',
     'FAILED',
     'CANCELED',
-];
+]);
 
 export class ProgressStatus {
     private readonly value: QueueJobProgressStatus;
@@ -18,7 +18,7 @@ export class ProgressStatus {
     }
 
     isFinal(): boolean {
-        return terminalStatuses.includes(this.value);
+        return terminalStatuses.has(this.value);
     }
 
     canCancel(): boolean {
