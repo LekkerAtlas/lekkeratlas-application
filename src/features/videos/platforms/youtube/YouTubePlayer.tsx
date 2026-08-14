@@ -1,9 +1,9 @@
-import type { VideoPlayerAdapterProps } from '@/features/videos/components/VideoPlayer';
-import {
-    VideoPlayerUi,
-    type VideoPlaybackActions,
-    type VideoPlaybackState,
-} from '@/features/videos/components/VideoPlayerUi';
+import { VideoPlayerUi } from '@/features/videos/components/video-player/components/VideoPlayerUi';
+import type {
+    VideoPlaybackActions,
+    VideoPlaybackState,
+    VideoPlayerAdapterProps,
+} from '@/features/videos/components/video-player/types/videoPlayerTypes';
 import {
     loadYouTubeIframeApi,
     type YouTubePlayer as YouTubePlayerInstance,
@@ -172,9 +172,9 @@ export function YouTubePlayer({
             playbackActions={playbackActions}
             sourceLink={{
                 label: 'YouTube',
-                href: `https://www.youtube.com/watch?v=${encodeURIComponent(
+                href: `https://youtu.be/${encodeURIComponent(
                     source.id
-                )}`,
+                )}?t=${currentTime.toFixed()}`,
             }}
         >
             <div ref={playerMountRef} />
