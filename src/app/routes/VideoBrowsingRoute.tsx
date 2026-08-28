@@ -1,10 +1,10 @@
 import { useAccessToken } from '@/features/auth/hooks/useAccessToken';
 import { VideoBrowser } from '@/features/videos/components/VideoBrowser';
-import { useVideosQuery } from '@/features/videos/hooks/useVideosQuery';
+import { useInfiniteVideosQuery } from '@/features/videos/hooks/useInfiniteVideosQuery';
 
 export function VideoBrowsingRoute() {
     const accessToken = useAccessToken();
-    const videosQuery = useVideosQuery(accessToken);
+    const videosQuery = useInfiniteVideosQuery(accessToken);
 
     if (!accessToken) {
         return <p>No access token found.</p>;
@@ -14,9 +14,19 @@ export function VideoBrowsingRoute() {
         return <p>Loading videos...</p>;
     }
 
-    if (videosQuery.isError) {
+    if (videosQuery.isError && !videosQuery.data) {
         return <p>Failed to load videos: {videosQuery.error.message}</p>;
     }
+
+    const videos = videosQuery.data?.pages.flat() ?? [];
+    const loadMoreError = videosQuery.isFetchNextPageError
+        ? videosQuery.error
+        : null;
+    const loadMoreVideos = () => {
+        if (videosQuery.hasNextPage && !videosQuery.isFetching) {
+            videosQuery.fetchNextPage();
+        }
+    };
 
     return (
         <section>
@@ -26,7 +36,14 @@ export function VideoBrowsingRoute() {
                 hosted.
             </p>
 
-            <VideoBrowser videos={videosQuery.data} />
+            <VideoBrowser
+                videos={videos}
+                hasNextPage={videosQuery.hasNextPage}
+                isFetching={videosQuery.isFetching}
+                isFetchingNextPage={videosQuery.isFetchingNextPage}
+                loadMoreError={loadMoreError}
+                onLoadMore={loadMoreVideos}
+            />
         </section>
     );
 }
