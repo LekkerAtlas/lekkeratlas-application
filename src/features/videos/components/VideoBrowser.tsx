@@ -75,7 +75,7 @@ export function VideoBrowser({
             ) : (
                 <div ref={loadMoreRef} className="video-browser__load-more">
                     {isFetchingNextPage && (
-                        <p role="status">Loading more videos...</p>
+                        <output>Loading more videos...</output>
                     )}
                     {!hasNextPage && <p>All videos loaded.</p>}
                 </div>
