@@ -1,13 +1,13 @@
 import { appPaths } from '@/config/paths';
 import { useAccessToken } from '@/features/auth/hooks/useAccessToken';
 import { VideoPlayer } from '@/features/videos/components/VideoPlayer';
-import { useVideosQuery } from '@/features/videos/hooks/useVideosQuery';
+import { useInfiniteVideosQuery } from '@/features/videos/hooks/useInfiniteVideosQuery';
 import { Link, useParams } from 'react-router';
 
 export function VideoViewerRoute() {
     const { contentId } = useParams<{ contentId: string }>();
     const accessToken = useAccessToken();
-    const videosQuery = useVideosQuery(accessToken);
+    const videosQuery = useInfiniteVideosQuery(accessToken);
 
     if (!contentId) {
         return <VideoNotFound />;
@@ -25,9 +25,9 @@ export function VideoViewerRoute() {
         return <p>Failed to load video: {videosQuery.error.message}</p>;
     }
 
-    const video = videosQuery.data.find(
-        (candidate) => candidate.contentId === contentId
-    );
+    const video = videosQuery.data.pages
+        .flat()
+        .find((candidate) => candidate.contentId === contentId);
 
     if (!video) {
         return <VideoNotFound />;

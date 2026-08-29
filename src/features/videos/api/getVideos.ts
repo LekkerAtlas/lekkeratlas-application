@@ -8,13 +8,6 @@ type GetVideosPageOptions = {
     size: number;
 };
 
-export function getVideos(accessToken: string) {
-    return apiClient<VideosResponse>(apiRoute, {
-        method: 'GET',
-        accessToken,
-    });
-}
-
 export function getVideosPage(
     accessToken: string,
     { page, size }: Readonly<GetVideosPageOptions>
